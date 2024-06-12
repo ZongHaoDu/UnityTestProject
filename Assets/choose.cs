@@ -52,6 +52,20 @@ public class choose : MonoBehaviour
                             Debug.Log("在指定區域內沒有檢測到物體");
                             // 生成物件
                             GameObject spawnedObject = Instantiate(Select.objectPrefabsStatic[index], Select.centerPosition, Quaternion.identity);
+                            // 獲取生成物件的 Renderer
+                            Renderer objectRenderer = spawnedObject.GetComponent<Renderer>();
+                            if (objectRenderer != null)
+                            {
+                                //獲取物件的最底部的座標 
+                                Vector3 minPoint = objectRenderer.bounds.min;
+                                float minX = minPoint.x;
+                                float minY = minPoint.y;
+                                float minZ = minPoint.z;
+                                // 調整生成位置，使其底部與指定位置對齊
+                                Vector3 newPosition = new Vector3(Select.centerPosition.x, Select.centerPosition.y + Select.centerPosition.y- minY-0.1f, Select.centerPosition.z);
+                                // 更新生成物件的位置
+                                spawnedObject.transform.position = newPosition;
+                            }
 
                             // 同時生成透明的有碰撞器的立方體
                             GameObject detectionCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
