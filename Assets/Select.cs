@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class Select : MonoBehaviour
 {
-    public List<GameObject> objectPrefabs;  // 要生成的物件列表
-    public Material newMaterial;            // 新材質
-    public Material originalMaterial;       // 原始材質
-    private Ray ray;                        // 射線
-    private RaycastHit hit;                 // 碰撞資訊
-    public static Vector3 centerPosition;
-    public static List<GameObject> objectPrefabsStatic;  // 靜態變數
+    public List<GameObject> objectPrefabs;     // 要生成的物件列表
+    public Material newMaterial;               // 點擊後要應用的新材質
+    public Material originalMaterial;          // 原始材質，用於重置其他物件
+    private Ray ray;                           // 射線，用於捕捉鼠標點擊位置
+    private RaycastHit hit;                    // 碰撞資訊，用於捕捉射線碰撞到的物件
+    public static Vector3 centerPosition;      // 中心位置，用於生成物件的位置
+    public static List<GameObject> objectPrefabsStatic; // 靜態變數，存儲要生成的物件列表
+    public static GameObject parentObject;     // 靜態變數，存儲點擊的物件作為新物件的父物件
 
     void Start()
     {
+        // 確保 originalMaterial 有值，如果沒有，嘗試自動設置為當前物件的材質
         if (originalMaterial == null)
         {
-            // 確保原始材質已經設置，如果沒有設置則自動獲取當前物體的材質
             Renderer renderer = GetComponent<Renderer>();
             if (renderer != null)
             {
@@ -24,43 +25,47 @@ public class Select : MonoBehaviour
             }
         }
 
-        // 初始化靜態變數
+        // 初始化靜態變數 objectPrefabsStatic
         objectPrefabsStatic = objectPrefabs;
     }
 
     void Update()
     {
+        // 檢查鼠標左鍵點擊
         if (Input.GetMouseButtonDown(0))
         {
-            // 使用主攝像機創建一根射線，射線的方向是我們鼠標點擊的位置
+            // 從主攝像機的位置創建一條射線指向鼠標點擊位置
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            // 使用物理類檢查射線的碰撞，若有打中則回傳 true
+            // 使用射線檢測碰撞
             if (Physics.Raycast(ray, out hit))
             {
-                // 確認射線是否碰撞到當前掛載腳本的物件
-                if (hit.collider.gameObject == this.gameObject&&hit.collider.CompareTag("land"))
+                // 確保射線碰撞到的是當前物件並且物件標籤為 "land"
+                if (hit.collider.gameObject == this.gameObject && hit.collider.CompareTag("land"))
                 {
                     Renderer renderer = hit.collider.gameObject.GetComponent<Renderer>();
 
                     if (renderer != null)
                     {
-                        centerPosition = renderer.bounds.center; // 取得選取物位置
-
+                        // 設置中心位置為碰撞物件的中心位置，並上移一點
+                        centerPosition = renderer.bounds.center;
                         centerPosition.y += 0.6f;
 
-                        // 在更換材質之前，將所有其他方塊的材質恢復為原始材質
+                        // 將所有 "land" 標籤的物件恢復為原始材質
                         Renderer[] allRenderers = FindObjectsOfType<Renderer>();
                         foreach (Renderer otherRenderer in allRenderers)
                         {
-                            if (otherRenderer != renderer && otherRenderer.tag=="land")
+                            if (otherRenderer != renderer && otherRenderer.CompareTag("land"))
                             {
                                 otherRenderer.material = originalMaterial;
                             }
                         }
 
-                        // 更換被擊中的物體的材質
+                        // 將點擊的物件設置為新材質
                         renderer.material = newMaterial;
+
+                        // 設置父物件為擊中的物件
+                        parentObject = hit.collider.gameObject;
                     }
                 }
             }
