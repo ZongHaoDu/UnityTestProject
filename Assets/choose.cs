@@ -10,9 +10,48 @@ public class choose : MonoBehaviour
 
     void Update()
     {
-        // 檢查鼠標左鍵點擊
+        //檢查鼠標左鍵點擊（用於拖移生成）
         if (Input.GetMouseButtonDown(0))
         {
+            // 檢查鼠標是否點擊在 UI 元素上
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+                pointerEventData.position = Input.mousePosition;
+
+                // 收集所有點擊結果
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointerEventData, results);
+
+                // 檢查點擊結果是否包含當前物件
+                foreach (RaycastResult result in results)
+                {
+                    if (result.gameObject == gameObject)
+                    {
+                        ischoose = true;
+                        objTag = gameObject.tag;
+                        int index = int.Parse(objTag);
+
+                        // 生成新物件
+                        GameObject spawnedObject = Instantiate(Select.objectPrefabsStatic[index], Input.mousePosition, Quaternion.identity);
+                        // 將生成物件的標籤設置為 "plant"
+                        spawnedObject.tag = "plant";
+                        //添加腳本
+                        spawnedObject.AddComponent<Product>();
+
+                        
+
+                        Debug.Log("生成了新物件，標籤為：" + objTag);
+                        Debug.Log("是否選擇：" + ischoose);
+                        break;
+                    }
+                }
+            }
+        }
+        // 檢查鼠標右鍵點擊（用於點擊生成）
+        if (Input.GetMouseButtonDown(1))
+        {
+            Select.scriptUse = true;
             // 檢查鼠標是否點擊在 UI 元素上
             if (EventSystem.current.IsPointerOverGameObject())
             {
@@ -42,6 +81,9 @@ public class choose : MonoBehaviour
                         // 生成新物件
                         GameObject spawnedObject = Instantiate(Select.objectPrefabsStatic[index], Select.centerPosition, Quaternion.identity);
 
+                        // 添加 Capsule Collider
+                        spawnedObject.AddComponent<CapsuleCollider>();
+
                         // 設置生成物件的父物件
                         if (Select.parentObject != null)
                         {
@@ -62,7 +104,7 @@ public class choose : MonoBehaviour
                             );
                             spawnedObject.transform.position = newPosition;
                         }
-
+                        
                         Debug.Log("生成了新物件，標籤為：" + objTag);
                         Debug.Log("是否選擇：" + ischoose);
                         break;

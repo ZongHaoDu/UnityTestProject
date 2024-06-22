@@ -45,6 +45,7 @@ public class CameraControl : MonoBehaviour
             }
         }
 
+        /*
         // 浪代菲公オ龄
         if (Input.GetMouseButtonDown(0))
         {
@@ -75,6 +76,8 @@ public class CameraControl : MonoBehaviour
                 Camera.main.transform.position -= movementVector;
             }
         }
+        */
+
 
         // 浪代菲公簎近簎笆
         float scroll = Input.GetAxis("Mouse ScrollWheel");
