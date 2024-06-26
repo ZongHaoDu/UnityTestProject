@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class Select : MonoBehaviour
 {
-    public List<GameObject> objectPrefabs;     // 要生成的物件列表
     public Material newMaterial;               // 點擊後要應用的新材質
     public Material originalMaterial;          // 原始材質，用於重置其他物件
     private Ray ray;                           // 射線，用於捕捉鼠標點擊位置
     private RaycastHit hit;                    // 碰撞資訊，用於捕捉射線碰撞到的物件
-    public static Vector3 centerPosition;      // 中心位置，用於生成物件的位置
-    public static List<GameObject> objectPrefabsStatic; // 靜態變數，存儲要生成的物件列表
-    public static GameObject parentObject;     // 靜態變數，存儲點擊的物件作為新物件的父物件
+    //public static Vector3 centerPosition;      // 中心位置，用於生成物件的位置
+    //public static List<GameObject> objectPrefabsStatic; // 靜態變數，存儲要生成的物件列表
+   // public static GameObject parentObject;     // 靜態變數，存儲點擊的物件作為新物件的父物件
     public static bool scriptUse; //這個script是否啟用
     void Start()
     {
@@ -27,7 +26,7 @@ public class Select : MonoBehaviour
         }
 
         // 初始化靜態變數 objectPrefabsStatic
-        objectPrefabsStatic = objectPrefabs;
+        //objectPrefabsStatic = objectPrefabs;
     }
 
     void Update()
@@ -63,11 +62,11 @@ public class Select : MonoBehaviour
                     if (Input.GetMouseButtonDown(0))
                     {
                         // 設置中心位置為碰撞物件的中心位置，並上移一點
-                        centerPosition = hit.collider.bounds.center;
-                        centerPosition.y += 0.6f;
-                        Debug.Log(centerPosition);
+                        //centerPosition = hit.collider.bounds.center;
+                        //centerPosition.y += 0.6f;
+                        //Debug.Log(centerPosition);
                         // 設置父物件為擊中的物件
-                        parentObject = hit.collider.gameObject;
+                        //parentObject = hit.collider.gameObject;
                         scriptUse = false;
                     }
                     
@@ -83,6 +82,7 @@ public class Select : MonoBehaviour
                             otherRenderer.material = originalMaterial;
                         }
                     }
+                    scriptUse = true;
                 }
             }
         }

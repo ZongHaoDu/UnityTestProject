@@ -10,16 +10,11 @@ public class Product : MonoBehaviour
     private RaycastHit hit;                   // 碰撞資訊，用於捕捉射線碰撞到的物件
     private static Vector3 centerPosition;    // 中心位置，用於生成物件的位置
     private GameObject parentObject;          // 用於記錄生成物件的父物件
-    private SortingGroup sortingGroup;        // Sorting Group 組件
 
     void Start()
     {
-
         isSet = false; // 初始狀態為未固定
 
-        // 添加 SortingGroup 組件並設置其屬性
-        sortingGroup = gameObject.AddComponent<SortingGroup>();
-        sortingGroup.sortingOrder = 1; // 設置 Sorting Order，根據需要調整數值
     }
 
     void Update()
@@ -28,7 +23,7 @@ public class Product : MonoBehaviour
         if (!isSet)
         {
             // 將鼠標位置轉換為世界座標
-            Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 3);
+            Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 5);
             transform.position = Camera.main.ScreenToWorldPoint(mousePosition);
             Debug.Log(transform.position);
         }

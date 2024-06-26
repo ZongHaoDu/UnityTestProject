@@ -10,6 +10,7 @@ public class choose : MonoBehaviour
 
     void Update()
     {
+        /*
         //檢查鼠標左鍵點擊（用於拖移生成）
         if (Input.GetMouseButtonDown(0))
         {
@@ -112,5 +113,6 @@ public class choose : MonoBehaviour
                 }
             }
         }
+        */
     }
 }
