@@ -24,13 +24,14 @@ public class Produce : MonoBehaviour
 
     void Update()
     {
-        // 檢查是否按下 ESC 鍵
+        // 按下esc狀態回歸初始
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             state = "init";
             Select.scriptUse = true;
             Debug.Log("狀態重置為 init");
         }
+        //初始狀態設定，避免未知問題產生
         if(state == "init")
         {
             isSet = true;
@@ -40,7 +41,7 @@ public class Produce : MonoBehaviour
         {
             if (state == "init")
             {
-                // 檢查鼠標是否點擊在 UI 元素上
+                // 檢查鼠標是否點擊在 UI 元素上（拖移生成用）
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
                     PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
@@ -71,9 +72,33 @@ public class Produce : MonoBehaviour
                 }
                 else
                 {
-                    // 若沒有點擊 UI 元素，則進行物件點擊生成
+                    // 選取方塊（用於點擊生成）
                     ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    if (Physics.Raycast(ray, out hit) && hit.collider.CompareTag("land"))
+                    if (Physics.Raycast(ray, out hit) && hit.collider != null)
+                    {
+                        Debug.Log("碰撞到物件：" + hit.collider.gameObject.name);
+                        if (hit.collider.CompareTag("land"))
+                        {
+                            Debug.Log("選取到方塊");
+                            centerPosition = hit.collider.bounds.center;
+                            centerPosition.y += 0.6f;
+                            parentObject = hit.collider.gameObject;
+                            state = "click";
+                            isSet = true;
+                        }
+                    }
+
+                }
+            }
+            //如果已經有選取方塊
+            else if (state == "click")
+            {
+                //如果點取其他方塊
+                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit) && hit.collider != null)
+                {
+                    Debug.Log("碰撞到物件：" + hit.collider.gameObject.name);
+                    if (hit.collider.CompareTag("land"))
                     {
                         Debug.Log("選取到方塊");
                         centerPosition = hit.collider.bounds.center;
@@ -83,9 +108,7 @@ public class Produce : MonoBehaviour
                         isSet = true;
                     }
                 }
-            }
-            else if (state == "click")
-            {
+                //如果點擊到圖片
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
                     PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
