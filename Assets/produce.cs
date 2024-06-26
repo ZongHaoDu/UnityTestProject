@@ -198,8 +198,16 @@ public class Produce : MonoBehaviour
         if (state == "drag" && !isSet)
         {
             Debug.Log("物件拖移中");
-            Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 5);
-            spawnedObject.transform.position = Camera.main.ScreenToWorldPoint(mousePosition);
+            // Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 5);
+            //spawnedObject.transform.position = Camera.main.ScreenToWorldPoint(mousePosition);
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                GameObject hitObject = hit.collider.gameObject;
+                centerPosition = hit.collider.bounds.center;
+                centerPosition.y += 0.6f;
+                spawnedObject.transform.position = centerPosition;
+            }
             Debug.Log("物件位置：" + spawnedObject.transform.position);
         }
     }
