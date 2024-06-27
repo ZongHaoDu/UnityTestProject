@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -218,5 +218,216 @@ public class Produce : MonoBehaviour
             }
             Debug.Log("物件位置：" + spawnedObject.transform.position);
         }
+    }
+}
+*/
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class Produce : MonoBehaviour
+{
+    private string state; // 狀態標記，用於區分不同操作（"init"、"click"、"drag"）
+    public List<GameObject> objectPrefabs; // 要生成的物件列表，通過 Inspector 設定
+    private Ray ray; // 射線，用於捕捉鼠標點擊位置
+    private RaycastHit hit; // 碰撞資訊，用於捕捉射線碰撞到的物件
+    public static Vector3 centerPosition; // 中心位置，用於生成物件的位置
+    private bool isSet; // 拖移物件是否已固定位置
+    public static List<GameObject> objectPrefabsStatic; // 靜態變數，存儲要生成的物件列表
+    public static GameObject parentObject; // 靜態變數，存儲點擊的物件作為新物件的父物件
+    private GameObject spawnedObject; // 類級別變數，用於保存生成的物件
+
+    void Start()
+    {
+        InitializeState();
+    }
+
+    void Update()
+    {
+        // 按下esc狀態回歸初始
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ResetToInitState();
+        }
+
+        //初始狀態設定，避免未知問題產生
+        if (state == "init")
+        {
+            isSet = true;
+        }
+
+        // 檢查鼠標左鍵點擊事件
+        if (Input.GetMouseButtonDown(0))
+        {
+            HandleMouseClick();
+        }
+
+        // 檢查鼠標左鍵釋放事件，用於固定拖移生成的物件
+        if (Input.GetMouseButtonUp(0) && !isSet)
+        {
+            HandleMouseRelease();
+        }
+
+        // 讓拖移生成的物件跟隨滑鼠移動
+        if (state == "drag" && !isSet)
+        {
+            DragSpawnedObject();
+        }
+    }
+
+    private void InitializeState()
+    {
+        state = "init";
+        objectPrefabsStatic = objectPrefabs;
+    }
+
+    private void ResetToInitState()
+    {
+        state = "init";
+        Select.scriptUse = true;
+        Debug.Log("狀態重置為 init");
+    }
+
+    private void HandleMouseClick()
+    {
+        if (state == "init")
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                TryInstantiateObjectFromUI();
+            }
+            else
+            {
+                SelectLandBlock();
+            }
+        }
+        else if (state == "click")
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                TryInstantiateObjectFromUI();
+            }
+            else
+            {
+                SelectLandBlock();
+            }
+        }
+    }
+
+    private void TryInstantiateObjectFromUI()
+    {
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        // 收集所有點擊結果
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            string objTag = result.gameObject.tag;
+            if (int.TryParse(objTag, out int index) && index < objectPrefabsStatic.Count)
+            {
+                if (state == "init")
+                {
+                    InstantiateObjectAtMousePosition(index);
+                    state = "drag";
+                    isSet = false;
+                }
+                else if (state == "click")
+                {
+                    InstantiateObjectAtCenterPosition(index);
+                    state = "init";
+                    Select.scriptUse = true;
+                }
+                return;
+            }
+        }
+    }
+
+    private void SelectLandBlock()
+    {
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit) && hit.collider != null)
+        {
+            if (hit.collider.CompareTag("land"))
+            {
+                centerPosition = hit.collider.bounds.center;
+                centerPosition.y += 0.5f;
+                parentObject = hit.collider.gameObject;
+                state = "click";
+                isSet = true;
+            }
+        }
+    }
+
+    private void InstantiateObjectAtMousePosition(int index)
+    {
+        spawnedObject = Instantiate(objectPrefabsStatic[index], Vector3.zero, Quaternion.identity);
+        spawnedObject.tag = "plant";
+        spawnedObject.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 5));
+        Debug.Log("生成物件：" + index);
+    }
+
+    private void InstantiateObjectAtCenterPosition(int index)
+    {
+        if (parentObject != null && parentObject.transform.childCount > 0)
+        {
+            Debug.Log("父物件已有子物件，不生成新物件");
+            return;
+        }
+        spawnedObject = Instantiate(objectPrefabsStatic[index], centerPosition, Quaternion.identity);
+        spawnedObject.AddComponent<CapsuleCollider>();
+        if (parentObject != null)
+        {
+            spawnedObject.transform.SetParent(parentObject.transform);
+        }
+        spawnedObject.tag = "plant";
+        Debug.Log("生成了新物件，標籤為：" + index);
+    }
+
+    private void HandleMouseRelease()
+    {
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(ray); // 獲取所有的碰撞結果
+
+        foreach (RaycastHit h in hits)
+        {
+            if (h.collider.CompareTag("land"))
+            {
+                if (h.collider.transform.childCount > 0)
+                {
+                    Destroy(spawnedObject);
+                }
+                else
+                {
+                    centerPosition = h.collider.bounds.center;
+                    centerPosition.y += 0.5f;
+                    spawnedObject.transform.position = centerPosition;
+                    spawnedObject.transform.SetParent(h.collider.transform);
+                    spawnedObject.AddComponent<CapsuleCollider>();
+                }
+                isSet = true;
+                state = "init";
+                return;
+            }
+        }
+    }
+
+    private void DragSpawnedObject()
+    {
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.CompareTag("land"))
+            {
+                centerPosition = hit.collider.bounds.center;
+                centerPosition.y += 0.5f;
+                spawnedObject.transform.position = centerPosition;
+            }
+        }
+        Debug.Log("物件位置：" + spawnedObject.transform.position);
     }
 }
