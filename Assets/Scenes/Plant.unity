@@ -841,11 +841,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 678605260}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 805941f1688788b4c96ac29a2364c2e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NetworkUser: {fileID: 0}
+  prefabRef:
+    RawGuidValue: 00000000000000000000000000000000
   objectPrefabs:
   - {fileID: 1737567652091642656, guid: eb3ffc6041e773d458b0fd389050b32c, type: 3}
   - {fileID: 8800123335441466892, guid: a3b42cf24b30e494cb9e9195aa9f5f57, type: 3}
@@ -1071,6 +1074,52 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &930174213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 930174215}
+  - component: {fileID: 930174214}
+  m_Layer: 0
+  m_Name: NetworkDefault
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &930174214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930174213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 937208c3b8044ca47ae99a83e3b4198e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkPrefabRef:
+    RawGuidValue: f763507ac8488864ca7bc1d6b2c29bec
+--- !u!4 &930174215
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930174213}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2132,11 +2181,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2070880902}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 805941f1688788b4c96ac29a2364c2e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NetworkUser: {fileID: 0}
+  prefabRef:
+    RawGuidValue: 00000000000000000000000000000000
   objectPrefabs:
   - {fileID: 1737567652091642656, guid: eb3ffc6041e773d458b0fd389050b32c, type: 3}
   - {fileID: 8800123335441466892, guid: a3b42cf24b30e494cb9e9195aa9f5f57, type: 3}
@@ -2293,3 +2345,4 @@ SceneRoots:
   - {fileID: 385226881}
   - {fileID: 518925907}
   - {fileID: 2061691447}
+  - {fileID: 930174215}
