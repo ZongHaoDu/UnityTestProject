@@ -793,7 +793,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 288, y: 94}
+  m_AnchoredPosition: {x: 366, y: -138}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &678605263
@@ -847,8 +847,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPrefabs:
-  - {fileID: 919132149155446097, guid: 44829bd6e4ba04f41ac0637e1fd2bd03, type: 3}
-  - {fileID: 919132149155446097, guid: 1f0f132cc1cd02848b19e53739cb45eb, type: 3}
+  - {fileID: 1737567652091642656, guid: eb3ffc6041e773d458b0fd389050b32c, type: 3}
+  - {fileID: 8800123335441466892, guid: a3b42cf24b30e494cb9e9195aa9f5f57, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1163,7 +1163,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.92387956, z: -0.38268343, w: 0}
-  m_LocalPosition: {x: -1.52, y: 3.92, z: 3.86}
+  m_LocalPosition: {x: 0.11, y: 4.7, z: 4.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1181,7 +1181,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6307905631f57d49a016be246be40a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomSpeed: 10
+  zoomSpeed: 2
+  moveSpeed: 0.005
 --- !u!1 &970505858
 GameObject:
   m_ObjectHideFlags: 0
@@ -2083,7 +2084,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 174, y: 95}
+  m_AnchoredPosition: {x: 238, y: -138}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2070880905
@@ -2137,8 +2138,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPrefabs:
-  - {fileID: 919132149155446097, guid: 44829bd6e4ba04f41ac0637e1fd2bd03, type: 3}
-  - {fileID: 919132149155446097, guid: 1f0f132cc1cd02848b19e53739cb45eb, type: 3}
+  - {fileID: 1737567652091642656, guid: eb3ffc6041e773d458b0fd389050b32c, type: 3}
+  - {fileID: 8800123335441466892, guid: a3b42cf24b30e494cb9e9195aa9f5f57, type: 3}
 --- !u!1 &2119004600
 GameObject:
   m_ObjectHideFlags: 0

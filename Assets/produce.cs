@@ -81,7 +81,7 @@ public class Produce : MonoBehaviour
                         {
                             Debug.Log("選取到方塊");
                             centerPosition = hit.collider.bounds.center;
-                            centerPosition.y += 0.6f;
+                            centerPosition.y += 0.5f;
                             parentObject = hit.collider.gameObject;
                             state = "click";
                             isSet = true;
@@ -102,7 +102,7 @@ public class Produce : MonoBehaviour
                     {
                         Debug.Log("選取到方塊");
                         centerPosition = hit.collider.bounds.center;
-                        centerPosition.y += 0.6f;
+                        centerPosition.y += 0.5f;
                         parentObject = hit.collider.gameObject;
                         state = "click";
                         isSet = true;
@@ -143,18 +143,6 @@ public class Produce : MonoBehaviour
                                 spawnedObject.transform.SetParent(parentObject.transform);
                             }
                             spawnedObject.tag = "plant";
-                            Renderer objectRenderer = spawnedObject.GetComponent<Renderer>();
-                            if (objectRenderer != null)
-                            {
-                                Vector3 minPoint = objectRenderer.bounds.min;
-                                float minY = minPoint.y;
-                                Vector3 newPosition = new Vector3(
-                                    centerPosition.x,
-                                    centerPosition.y + centerPosition.y - minY - 0.1f,
-                                    centerPosition.z
-                                );
-                                spawnedObject.transform.position = newPosition;
-                            }
                             Debug.Log("生成了新物件，標籤為：" + objTag);
                             // 重置狀態為 "init"
                             state = "init";
@@ -171,28 +159,44 @@ public class Produce : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && !isSet)
         {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
+            RaycastHit[] hits = Physics.RaycastAll(ray); // 獲取所有的碰撞結果
+            RaycastHit hit = new RaycastHit(); // 初始化 hit
+            GameObject hitObject = null;
+
+            // 遍歷所有碰撞結果，找到第一個具有 tag 為 "land" 的物件
+            foreach (RaycastHit h in hits)
             {
-                GameObject hitObject = hit.collider.gameObject;
-                if (hitObject.transform.childCount > 0 || !hit.collider.CompareTag("land"))
+                if (h.collider.CompareTag("land"))
                 {
-                    Debug.Log("父物件已有子物件或點擊的不是 'land'，刪除生成的物件");
+                    hit = h;
+                    hitObject = hit.collider.gameObject;
+                    break;
+                }
+            }
+
+            // 如果找到標籤為 "land" 的物件
+            if (hitObject != null)
+            {
+                if (hitObject.transform.childCount > 0)
+                {
+                    Debug.Log(hit.collider.name);
+                    Debug.Log("父物件已有子物件，刪除生成的物件");
                     Destroy(spawnedObject); // 摧毀生成的物件
-                    isSet = true;
-                    state = "init";
                 }
                 else
                 {
                     centerPosition = hit.collider.bounds.center;
-                    centerPosition.y += 0.6f;
+                    centerPosition.y += 0.5f;
                     spawnedObject.transform.position = centerPosition;
                     spawnedObject.transform.SetParent(hitObject.transform);
                     spawnedObject.AddComponent<CapsuleCollider>();
-                    isSet = true;
-                    state = "init";
                 }
+                isSet = true;
+                state = "init";
             }
         }
+
+
 
         // 讓拖移生成的物件跟隨滑鼠移動
         if (state == "drag" && !isSet)
@@ -203,10 +207,14 @@ public class Produce : MonoBehaviour
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
-                GameObject hitObject = hit.collider.gameObject;
-                centerPosition = hit.collider.bounds.center;
-                centerPosition.y += 0.6f;
-                spawnedObject.transform.position = centerPosition;
+                // 碰撞到的是 "land" 標籤的物件
+                if (hit.collider.CompareTag("land"))
+                {
+                    GameObject hitObject = hit.collider.gameObject;
+                    centerPosition = hit.collider.bounds.center;
+                    centerPosition.y += 0.5f;
+                    spawnedObject.transform.position = centerPosition;
+                }
             }
             Debug.Log("物件位置：" + spawnedObject.transform.position);
         }

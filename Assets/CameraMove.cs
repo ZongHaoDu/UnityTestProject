@@ -10,6 +10,7 @@ public class CameraControl : MonoBehaviour
     private Vector3 SecondVector;
 
     public float zoomSpeed = 10f; // 縮放速度
+    public float moveSpeed = 0.005f; // x、y移動速度
     private string now = "undefine";
     // Update is called once per frame
     void Start()
@@ -22,13 +23,13 @@ public class CameraControl : MonoBehaviour
         {
             Vector3 currentPosition = Camera.main.transform.position;
             if (now == "D")
-                currentPosition.x -= 0.001f; // 往右
+                currentPosition.x -= moveSpeed; // 往右
             if (now == "A")
-                currentPosition.x += 0.001f; // 往左
+                currentPosition.x += moveSpeed; // 往左
             if (now == "W")
-                currentPosition.z -= 0.001f; // 往前
+                currentPosition.z -= moveSpeed; // 往前
             if (now == "S")
-                currentPosition.z += 0.001f; // 往後
+                currentPosition.z += moveSpeed; // 往後
             Camera.main.transform.position = currentPosition; // 將修改後的位置賦值給相機
         }
         if (Input.GetKeyUp(KeyCode.D)|| Input.GetKeyUp(KeyCode.A)|| Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
