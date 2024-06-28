@@ -233,14 +233,18 @@ public class Produce : MonoBehaviour
     public NetworkPrefabRef prefabRef;
 
     private string state; // 狀態標記，用於區分不同操作（"init"、"click"、"drag"）
-    public List<GameObject> objectPrefabs; // 要生成的物件列表，通過 Inspector 設定
+    
+    public List<NetworkPrefabRef> objectPrefabs; // 要生成的物件列表，通過 Inspector 設定
     private Ray ray; // 射線，用於捕捉鼠標點擊位置
     private RaycastHit hit; // 碰撞資訊，用於捕捉射線碰撞到的物件
     public static Vector3 centerPosition; // 中心位置，用於生成物件的位置
     private bool isSet; // 拖移物件是否已固定位置
-    public static List<GameObject> objectPrefabsStatic; // 靜態變數，存儲要生成的物件列表
+    public static List<NetworkPrefabRef> objectPrefabsStatic; // 靜態變數，存儲要生成的物件列表
     public static GameObject parentObject; // 靜態變數，存儲點擊的物件作為新物件的父物件
     private GameObject spawnedObject; // 類級別變數，用於保存生成的物件
+
+    private NetworkRunner _networkRunner;
+
 
     void Start()
     {
@@ -249,13 +253,28 @@ public class Produce : MonoBehaviour
 
     }
 
+    void SpawnNetworkObject(NetworkPrefabRef prefabRef, Vector3 position, Quaternion quaternion)
+    {
+        _networkRunner.Spawn(prefabRef, position, quaternion);
+    }
+
+
+
     private void Awake()
     {
-        NetworkUser = GetComponent<NetworkUser>();
+        //NetworkUser = GetComponent<NetworkUser>();
+        _networkRunner = FindObjectOfType<NetworkRunner>();
     }
 
     void Update()
     {
+
+        //if (_networkRunner != null && _networkRunner.IsRunning)
+        //{
+        //    // 生成物件
+        //    _networkRunner.Spawn(prefabRef, position: Vector3.zero, rotation: Quaternion.identity);
+        //}
+
         // 按下esc狀態回歸初始
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -275,16 +294,31 @@ public class Produce : MonoBehaviour
         }
 
         // 檢查鼠標左鍵釋放事件，用於固定拖移生成的物件
-        if (Input.GetMouseButtonUp(0) && !isSet)
-        {
-            HandleMouseRelease();
-        }
+        //if (Input.GetMouseButtonUp(0) && !isSet)
+        //{
+        //    HandleMouseRelease();
+        //}
 
         // 讓拖移生成的物件跟隨滑鼠移動
-        if (state == "drag" && !isSet)
+        //if (state == "drag" && !isSet)
+        //{
+        //    DragSpawnedObject();
+        //}
+    }
+
+    public bool GetClickObject(out GameObject gameObject)
+    {
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit) && hit.collider != null)
         {
-            DragSpawnedObject();
+            if (hit.collider.CompareTag("land"))
+            {
+                gameObject = hit.collider.gameObject;
+                return true;
+            }
         }
+        gameObject = null;
+        return false;
     }
 
     private void InitializeState()
@@ -340,11 +374,12 @@ public class Produce : MonoBehaviour
         foreach (RaycastResult result in results)
         {
             string objTag = result.gameObject.tag;
+            Debug.Log("目前TAG" + objTag + "目前狀態" + state);
             if (int.TryParse(objTag, out int index) && index < objectPrefabsStatic.Count)
             {
                 if (state == "init")
                 {
-                    InstantiateObjectAtMousePosition(index);
+                    //InstantiateObjectAtMousePosition(index);
                     state = "drag";
                     isSet = false;
                 }
@@ -375,15 +410,15 @@ public class Produce : MonoBehaviour
         }
     }
 
-    private void InstantiateObjectAtMousePosition(int index)
-    {
+    //private void InstantiateObjectAtMousePosition(int index)
+    //{
 
 
-        spawnedObject = Instantiate(objectPrefabsStatic[index], Vector3.zero, Quaternion.identity);
-        spawnedObject.tag = "plant";
-        spawnedObject.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 5));
-        Debug.Log("生成物件：" + index);
-    }
+    //    spawnedObject = Instantiate(objectPrefabsStatic[index], Vector3.zero, Quaternion.identity);
+    //    spawnedObject.tag = "plant";
+    //    spawnedObject.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 5));
+    //    Debug.Log("生成物件：" + index);
+    //}
 
     private void InstantiateObjectAtCenterPosition(int index)
     {
@@ -392,8 +427,8 @@ public class Produce : MonoBehaviour
             Debug.Log("父物件已有子物件，不生成新物件");
             return;
         }
-        Debug.Log($"{prefabRef.ToString()}");
-         NetworkUser.SpawnObject(prefabRef, centerPosition, Quaternion.identity);
+        Debug.Log($"進入物件生成");
+        SpawnNetworkObject(objectPrefabs[index], centerPosition, Quaternion.identity);
         //spawnedObject.AddComponent<CapsuleCollider>();
         //if (parentObject != null)
         //{

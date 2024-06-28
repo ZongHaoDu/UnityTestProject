@@ -51,11 +51,11 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
         {
             if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))
             {
-                GameStart(GameMode.Shared, "Shared");
+                GameStart(GameMode.Shared, "DefalutRoom");
             }
             if (GUI.Button(new Rect(0, 40, 200, 40), "Join"))
             {
-                GameStart(GameMode.Shared, "Shared");
+                GameStart(GameMode.Shared, "DefalutRoom");
             }
             if(GUI.Button(new Rect (0, 80, 200, 40), "List"))
             {
@@ -115,7 +115,7 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if ( player == runner.LocalPlayer )
+        if (  runner.LocalPlayer == player )
         {
             Vector3 playerPos = new Vector3(0,5,0);
 
