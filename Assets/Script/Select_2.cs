@@ -30,7 +30,7 @@ public class Select_2 : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("scriptuse"+scriptUse);
+        //Debug.Log("scriptuse"+scriptUse);
         // 檢查鼠標左鍵點擊
         if (scriptUse|| Input.GetMouseButtonDown(0))
         {
@@ -40,9 +40,11 @@ public class Select_2 : MonoBehaviour
                 Debug.Log("鼠標在UI上，射線檢測跳過");
                 return; // 如果鼠標在 UI 上，跳過射線檢測
             }
-            Debug.Log("aaaaa");
+            //Debug.Log("aaaaa");
             // 從主攝像機的位置創建一條射線指向鼠標點擊位置
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+
 
             // 使用射線檢測碰撞
             if (Physics.Raycast(ray, out hit))

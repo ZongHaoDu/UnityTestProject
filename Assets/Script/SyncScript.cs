@@ -2,12 +2,14 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
 {
     private NetworkRunner networkRunner;
+
 
     [SerializeField] 
     private NetworkPrefabRef networkPrefabRef;
@@ -42,8 +44,15 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
             PlayerCount = 10 
         });
 
+        
+
+
     }
 
+    async void SpawnMap(NetworkPrefabRef prefabRef, NetworkRunner runner)
+    {
+        var mapObject = await runner.SpawnAsync(prefabRef, Vector3.zero);
+    }
 
     private void OnGUI()
     {
@@ -51,11 +60,11 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
         {
             if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))
             {
-                GameStart(GameMode.Shared, "DefalutRoom");
+                GameStart(GameMode.Host, "DefalutRoom");
             }
             if (GUI.Button(new Rect(0, 40, 200, 40), "Join"))
             {
-                GameStart(GameMode.Shared, "DefalutRoom");
+                GameStart(GameMode.Client, "DefalutRoom");
             }
             if(GUI.Button(new Rect (0, 80, 200, 40), "List"))
             {
@@ -73,7 +82,10 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        
+        //if(runner.IsServer)
+        //{
+        //    SpawnMap(networkPrefabRef, runner);
+        //}
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
@@ -111,17 +123,14 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
         
     }
 
-    
-
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (  runner.LocalPlayer == player )
+        
+        if (runner.IsServer)
         {
-            Vector3 playerPos = new Vector3(0,5,0);
-
-            NetworkObject network = runner.Spawn(networkPrefabRef, playerPos, Quaternion.identity, player);
-            
+            runner.Spawn(networkPrefabRef);
         }
+        
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
