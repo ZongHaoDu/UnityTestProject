@@ -11,6 +11,11 @@ TagManager:
   - land
   - plant
   - DetectionCube
+  - River
+  - Road
+  - Build cube
+  - 3
+  - 2
   layers:
   - Default
   - TransparentFX

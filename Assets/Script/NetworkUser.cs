@@ -1,4 +1,4 @@
-using Fusion;
+/*using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -59,3 +59,4 @@ public class NetworkUser : NetworkBehaviour
 
 
 }
+*/

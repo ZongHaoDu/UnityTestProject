@@ -1,4 +1,4 @@
-/*using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -28,7 +28,7 @@ public class Produce : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             state = "init";
-            Select.scriptUse = true;
+            Select_2.scriptUse = true;
             Debug.Log("狀態重置為 init");
         }
         //初始狀態設定，避免未知問題產生
@@ -93,21 +93,7 @@ public class Produce : MonoBehaviour
             //如果已經有選取方塊
             else if (state == "click")
             {
-                //如果點取其他方塊
-                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit) && hit.collider != null)
-                {
-                    Debug.Log("碰撞到物件：" + hit.collider.gameObject.name);
-                    if (hit.collider.CompareTag("land"))
-                    {
-                        Debug.Log("選取到方塊");
-                        centerPosition = hit.collider.bounds.center;
-                        centerPosition.y += 0.5f;
-                        parentObject = hit.collider.gameObject;
-                        state = "click";
-                        isSet = true;
-                    }
-                }
+                
                 //如果點擊到圖片
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
@@ -141,14 +127,33 @@ public class Produce : MonoBehaviour
                             if (parentObject != null)
                             {
                                 spawnedObject.transform.SetParent(parentObject.transform);
+                                spawnedObject.transform.SetParent(parentObject.transform);
                             }
                             spawnedObject.tag = "plant";
                             Debug.Log("生成了新物件，標籤為：" + objTag);
                             // 重置狀態為 "init"
                             state = "init";
                             // 啟用 Select script 
-                            Select.scriptUse = true;
+                            Select_2.scriptUse = true;
                             break;
+                        }
+                    }
+                }
+                else
+                {
+                    //如果點取其他方塊
+                    ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    if (Physics.Raycast(ray, out hit) && hit.collider != null)
+                    {
+                        Debug.Log("碰撞到物件：" + hit.collider.gameObject.name);
+                        if (hit.collider.CompareTag("land"))
+                        {
+                            Debug.Log("選取到方塊");
+                            centerPosition = hit.collider.bounds.center;
+                            centerPosition.y += 0.5f;
+                            parentObject = hit.collider.gameObject;
+                            state = "click";
+                            isSet = true;
                         }
                     }
                 }
@@ -220,7 +225,7 @@ public class Produce : MonoBehaviour
         }
     }
 }
-*/
+/*
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
@@ -481,3 +486,4 @@ public class Produce : MonoBehaviour
         Debug.Log("物件位置：" + spawnedObject.transform.position);
     }
 }
+*/

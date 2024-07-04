@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraControl : MonoBehaviour
+public class CameraMove : MonoBehaviour
 {
     private Ray ray; // 射線
     private RaycastHit hit; // 用來存儲射線檢測到的對象信息
@@ -23,13 +23,13 @@ public class CameraControl : MonoBehaviour
         {
             Vector3 currentPosition = Camera.main.transform.position;
             if (now == "D")
-                currentPosition.x -= moveSpeed; // 往右
+                currentPosition.x += moveSpeed; // 往右
             if (now == "A")
-                currentPosition.x += moveSpeed; // 往左
+                currentPosition.x -= moveSpeed; // 往左
             if (now == "W")
-                currentPosition.z -= moveSpeed; // 往前
+                currentPosition.z += moveSpeed; // 往前
             if (now == "S")
-                currentPosition.z += moveSpeed; // 往後
+                currentPosition.z -= moveSpeed; // 往後
             Camera.main.transform.position = currentPosition; // 將修改後的位置賦值給相機
         }
         if (Input.GetKeyUp(KeyCode.D)|| Input.GetKeyUp(KeyCode.A)|| Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))

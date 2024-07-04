@@ -71,17 +71,8 @@ public class PlantBloodBar : MonoBehaviour
         for (int i = 0; i < parentTransform.childCount; i++)
         {
             Transform childTransform = parentTransform.GetChild(i);
-            string childName = childTransform.name;
-            Debug.Log("Child name: " + childName);
-            if (childName == "tomato_garden")
-            {
-                return 20.0f;
-            }
-            if (childName == "Cabbage_garden")
-            {
-                return 10.0f;
-            }
-            // 在這裡可以使用 childName 做任何你需要的事情
+            // 獲取時間參數
+            return ParameterQuery.QueryParameters(childTransform.gameObject, "time");
         }
         return 5.0f;
     }
