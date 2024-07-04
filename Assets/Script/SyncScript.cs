@@ -16,6 +16,13 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
 
     private Dictionary<PlayerRef, NetworkObject> spawnCharacter = new Dictionary<PlayerRef, NetworkObject>();
 
+    
+    public void InitGameRoom(NetworkRunner networkRunner)
+    {
+        networkRunner.Spawn(networkPrefabRef);
+    }
+
+
     async void JoinLobby()
     {
         networkRunner.JoinSessionLobby(SessionLobby.Shared);
@@ -41,17 +48,13 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = sessionName,
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
-            PlayerCount = 10 
+            PlayerCount = 2,
+            OnGameStarted = InitGameRoom,
         });
 
         
 
 
-    }
-
-    async void SpawnMap(NetworkPrefabRef prefabRef, NetworkRunner runner)
-    {
-        var mapObject = await runner.SpawnAsync(prefabRef, Vector3.zero);
     }
 
     private void OnGUI()
@@ -128,7 +131,7 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
         
         if (runner.IsServer)
         {
-            runner.Spawn(networkPrefabRef);
+            //runner.Spawn(networkPrefabRef);
         }
         
     }
