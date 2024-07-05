@@ -38,6 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -246,6 +247,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3301425580025650967, guid: ff30fa1dbfb25644591ee8922343f512, type: 3}
+      propertyPath: userController.RawGuidValue.Array.data[0]
+      value: 4929033772303065334
+      objectReference: {fileID: 0}
+    - target: {fileID: 3301425580025650967, guid: ff30fa1dbfb25644591ee8922343f512, type: 3}
+      propertyPath: userController.RawGuidValue.Array.data[1]
+      value: 1565096968053967480
+      objectReference: {fileID: 0}
+    - target: {fileID: 3301425580025650967, guid: ff30fa1dbfb25644591ee8922343f512, type: 3}
       propertyPath: networkPrefabRef.RawGuidValue.Array.data[0]
       value: -7759164354405327886
       objectReference: {fileID: 0}
@@ -260,7 +269,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8394731341271447368, guid: ff30fa1dbfb25644591ee8922343f512, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1638602770}
   m_SourcePrefab: {fileID: 100100000, guid: ff30fa1dbfb25644591ee8922343f512, type: 3}
 --- !u!1 &708889023
 GameObject:
@@ -745,6 +757,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1638602769 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8394731341271447368, guid: ff30fa1dbfb25644591ee8922343f512, type: 3}
+  m_PrefabInstance: {fileID: 665860689}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1638602770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1638602769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37d32cfdee68c814b94bda214c844219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1983623719
 GameObject:
   m_ObjectHideFlags: 0

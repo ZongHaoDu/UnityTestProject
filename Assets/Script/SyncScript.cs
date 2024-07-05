@@ -13,6 +13,8 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
 
     [SerializeField] 
     private NetworkPrefabRef networkPrefabRef;
+    [SerializeField]
+    private NetworkPrefabRef userController;
 
     private Dictionary<PlayerRef, NetworkObject> spawnCharacter = new Dictionary<PlayerRef, NetworkObject>();
 
@@ -50,6 +52,8 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
             PlayerCount = 2,
             OnGameStarted = InitGameRoom,
+            IsVisible = true,
+            IsOpen = true
         });
 
         
@@ -128,12 +132,10 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        
-        if (runner.IsServer)
-        {
-            //runner.Spawn(networkPrefabRef);
-        }
-        
+        NetworkObject controller = runner.Spawn(userController, Vector3.zero, Quaternion.identity, player);
+
+        spawnCharacter.Add(player, controller);
+
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -169,11 +171,7 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        int y_axis = 40;
-        foreach(SessionInfo sessionInfo in sessionList)
-        {
-            
-        }
+
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
@@ -200,26 +198,7 @@ public class SyncScript : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, Fusion.NetworkInput input)
     {
-        var data = new NetworkInput ();
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            data.direction += Vector3.forward;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            data.direction += Vector3.back;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            data.direction += Vector3.left;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            data.direction += Vector3.right;
-        }
-
-        input.Set(data);
+        
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, Fusion.NetworkInput input)
