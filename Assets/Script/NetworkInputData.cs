@@ -7,14 +7,14 @@ using UnityEngine;
 public enum NetworkInputState
 {
     Default,
-    Spawn
+    SpawnBuilding
 }
 
 
 public struct NetworkInputData : INetworkInput
 {
-
-    public NetworkInputState state;
+    public NetworkId selectObjectId;
+    public NetworkButtons buttons;
     public Vector3 selectDirection;
 
 }

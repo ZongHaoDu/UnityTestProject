@@ -8,11 +8,13 @@ using UnityEngine;
 
 public class LocalController : MonoBehaviour, INetworkRunnerCallbacks
 {
-    private NetworkInputState InputState;
     private GameObject selectedObject;
+    private NetworkInputData inputData;
 
-    public void FixedUpdate()
+
+    public void Update()
     {
+        inputData = new NetworkInputData();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         bool isHit = Physics.Raycast(ray, out hit);
@@ -22,24 +24,22 @@ public class LocalController : MonoBehaviour, INetworkRunnerCallbacks
             return;
         }
         selectedObject = hit.collider.gameObject;
-        
+
+
+        if (Input.GetMouseButtonDown((int)MouseButton.Left))
+        {
+            inputData.buttons.Set(NetworkInputState.SpawnBuilding, true);
+            inputData.selectObjectId = selectedObject.GetComponent<NetworkObject>().Id;
+            Debug.Log(inputData.selectObjectId);
+        }
 
     }
 
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        var data = new NetworkInputData();
-
-        data.selectDirection = selectedObject.transform.position;
-        if (Input.GetMouseButtonDown((int)MouseButton.Left))
-        {
-            InputState = NetworkInputState.Spawn;
-            data.state = InputState;
-        }
-        InputState = NetworkInputState.Default;
         
-        input.Set(data);
+        input.Set(inputData);
     }
 
 

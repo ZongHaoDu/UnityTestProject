@@ -7,23 +7,36 @@ public class NetworkController : NetworkBehaviour
 {
     [SerializeField]
     private NetworkPrefabRef prefabRef;
+    
+    private void SpawnBuilding(NetworkInputData data)
+    {
+        bool isSelect = Runner.TryFindObject(data.selectObjectId, out NetworkObject selectObject);
 
+        if (!isSelect)
+        {
+            return;
+        }
+
+        NetworkObject spawnObject =  Runner.Spawn(
+                    prefabRef,
+                    selectObject.transform.position + new Vector3(0 ,(float) 0.5 ,0),
+                    Quaternion.identity,
+                    Object.StateAuthority
+                );
+
+        spawnObject.transform.SetParent(selectObject.transform);
+
+    }
 
     public override void FixedUpdateNetwork()
     {
         if(GetInput(out NetworkInputData data))
         {
-            if(data.state == NetworkInputState.Spawn)
+            if(data.buttons.IsSet(NetworkInputState.SpawnBuilding))
             {
-                Runner.Spawn(
-                    prefabRef,
-                    data.selectDirection + new Vector3(0,2,0),
-                    Quaternion.identity,
-                    Object.StateAuthority
-                );
+                SpawnBuilding(data);
             }
         }
-        
 
 
     }
