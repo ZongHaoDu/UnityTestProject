@@ -17,12 +17,12 @@ public class NetworkController : NetworkBehaviour
             return;
         }
 
-        NetworkObject spawnObject =  Runner.Spawn(
+        NetworkObject spawnObject = Runner.Spawn(
                     prefabRef,
-                    selectObject.transform.position + new Vector3(0 ,(float) 0.5 ,0),
+                    selectObject.transform.position + new Vector3(0, (float)0.5, 0),
                     Quaternion.identity,
-                    Object.StateAuthority
-                );
+                    Object.InputAuthority
+                ) ;
 
         spawnObject.transform.SetParent(selectObject.transform);
 
